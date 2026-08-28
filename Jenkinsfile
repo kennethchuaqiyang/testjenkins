@@ -2,6 +2,9 @@ pipeline {
   agent {
   docker { image 'mcr.microsoft.com/playwright:v1.62.1-jammy' }
 }
+    triggers {
+    cron('H/5 * * * *')
+  }
   stages {
     stage('Install') {
       steps { sh 'npm ci' }
