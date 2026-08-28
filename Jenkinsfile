@@ -16,11 +16,14 @@ pipeline {
   post {
     always {
       archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-      emailext (
-        subject: "Playwright Run #${env.BUILD_NUMBER}: ${currentBuild.currentResult}",
-        body: "Test email from DO Jenkins controller. Build ${env.BUILD_NUMBER} status: ${currentBuild.currentResult}.",
-        to: 'kennethchuaqiyang@gmail.com'
-      )
+      publishHTML(target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: true,
+        keepAll: true,
+        reportDir: 'playwright-report',
+        reportFiles: 'index.html',
+        reportName: 'Playwright HTML Report'
+      ])
     }
   }
 }
