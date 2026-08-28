@@ -24,9 +24,17 @@ pipeline {
         reportFiles: 'index.html',
         reportName: 'Playwright HTML Report'
       ])
+      script {
+        env.TEST_SUMMARY = sh(script: 'node summarize.js', returnStdout: true).trim()
+      }
       emailext (
         subject: "Playwright Run #${env.BUILD_NUMBER}: ${currentBuild.currentResult}",
-        body: "Build ${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}.\nConsole: ${env.BUILD_URL}console\nHTML Report: ${env.BUILD_URL}Playwright_20HTML_20Report/",
+        body: """Build ${env.BUILD_NUMBER} finished with status: ${currentBuild.currentResult}.
+
+${env.TEST_SUMMARY}
+
+Full report: ${env.BUILD_URL}Playwright_20HTML_20Report/
+Console: ${env.BUILD_URL}console""",
         to: 'kennethchuaqiyang@gmail.com'
       )
     }
